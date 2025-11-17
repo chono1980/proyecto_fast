@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Gestor de Tareas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Lista de Tareas */
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task-text {
+            flex-grow: 1;
+        }
+
+        .completed .task-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        /* Formulario */
+        .add-task-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        #texto_tarea {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-button {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .complete-button {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            text-decoration: none; /* Para usarlo como enlace disfrazado de botón */
+        }
+        
+        .complete-button:hover, .add-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Ocultar el botón/enlace en tareas completadas para consistencia */
+        .completed .complete-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Gestor de Tareas</h1>
+        
+        <ul class="task-list" role="list">
+            {% for tarea in tareas %}
+                <li class="task-item {% if tarea.hecho %}completed{% endif %}" role="listitem">
+                    <span class="task-text">{{ tarea.texto }}</span>
+                    
+                    {% if not tarea.hecho %}
+                        <a href="/completar/{{ tarea.id }}" 
+                           class="complete-button"
+                           aria-label="Marcar '{{ tarea.texto }}' como completada"
+                           role="button">
+                            Hecho
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <form action="/agregar" method="post" class="add-task-form" role="form">
+            <label for="texto_tarea" class="sr-only">Nueva tarea:</label>
+            <input type="text" 
+                   id="texto_tarea" 
+                   name="texto_tarea" 
+                   placeholder="Escribe una nueva tarea..." 
+                   required
+                   aria-required="true">
+            <button type="submit" class="add-button">Añadir</button>
+        </form>
+    </div>
+</body>
+</html>
